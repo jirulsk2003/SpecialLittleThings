@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Special Little Things ✨</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Marck+Script&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Confetti library for celebration effects -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+
+  <!-- Abstract Dynamic Canvas: Floating Petals, Music-Pulse Heart & Interactive Sparkles -->
+  <canvas id="effectsCanvas"></canvas>
+
+  <!-- Audio Element -->
+  <audio id="bgMusic" src="music/music.mp3" loop preload="auto" playsinline></audio>
+
+  <!-- Autoplay Bypass Tap Overlay -->
+  <div id="tapToStartOverlay" class="tap-start-overlay">
+    <div class="tap-content">
+      <span class="tap-icon">🌷</span>
+      <p>Hey Nasrin... ekta chhoto surprise ache.<br><strong>Tap anywhere to enter ✨</strong></p>
+    </div>
+  </div>
+
+  <!-- Persistent Floating Music Bar -->
+  <header class="music-bar" id="musicBar">
+    <div class="visualizer" id="visualizer">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </div>
+    <span class="music-tag">Tera Mera Hai Pyar Amar</span>
+    <button id="musicToggleBtn" aria-label="Toggle Music">▶</button>
+  </header>
+
+  <!-- PHASE 01 & 02: Secret Password Entrance -->
+  <section class="screen active" id="screen-password">
+    <div class="card glass">
+      <div class="heart-pulse-icon">💖</div>
+      <h1 class="romantic-title" id="dynamicGreeting">Hey, pretty girl…</h1>
+      <p class="subtitle">tomar jonno kichhu special ache. 🙈💕</p>
+      <p class="sub-lead">A little surprise, a little nervousness, and one special question… 🌷</p>
+
+      <div class="input-wrapper">
+        <input type="password" id="passInput" placeholder="Enter special date (DDMMYYYY)..." autocomplete="off">
+        <button type="button" id="togglePassBtn" title="Show/Hide">👁️</button>
+      </div>
+      <p id="errorMsg" class="error-text"></p>
+
+      <div class="btn-group">
+        <button id="unlockBtn" class="btn primary">Unlock Surprise ✨</button>
+        <button id="hintBtn" class="btn outline">Need a Hint? 💡</button>
+      </div>
+
+      <div id="hintBox" class="hint-card hidden">
+        <p>💡 <em>"Yaad karo... amader first koto tarikhe kotha start hoyechhilo? Sei special date-tai holo password! (Format: DDMMYYYY) 🙈💬"</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHASE 03 & 04: Animated Secret Envelope with Dynamic Days Badge & Stamp -->
+  <section class="screen" id="screen-envelope">
+    <div class="card glass text-center">
+      <!-- Days Since First Talk Badge -->
+      <div id="daysCounterBadge" class="days-badge">✨ Counting our special moments...</div>
+
+      <h2>Ekta Chhoto Chithi... 💌</h2>
+      <p class="subtitle">Tap the wax seal to break the stamp:</p>
+      
+      <div class="origami-envelope" id="envelopeWrapper">
+        <div class="env-flap"></div>
+        <div class="env-seal" id="waxSealBtn" title="Tap to Break Seal">💌</div>
+        <div class="env-body"></div>
+      </div>
+
+      <button id="openEnvBtn" class="btn primary">Open Secret Envelope 🌷</button>
+    </div>
+  </section>
+
+  <!-- PHASE 05 & 06: Interactive Heart Constellation & Star Messages -->
+  <section class="screen" id="screen-constellation">
+    <div class="card glass wide-card">
+      <h2>Look into the Stars ✨</h2>
+      <p class="subtitle">Tap any star to reveal a sweet message:</p>
+
+      <div class="constellation-grid">
+        <button class="star-btn" data-msg="Hazaar khwahisho ke darmiyan bas ek dua rehti hai, teri muskurahat mein meri duniya basti hai. Tujhe paane ki zidd nahi, bas sambhaalne ki chahat hai. 🌷">⭐ Star 1</button>
+        <button class="star-btn" data-msg="Tomar sathe thaka maane shudhu bhalobasha noy—tomar protita icche, protita shopno ar tomar shiddhanto-ke shorbochho shonman deoa. 🤍">⭐ Star 2</button>
+        <button class="star-btn" data-msg="Ami shob kichhu shohoj korte na parle-o, bhorsha dite pari—jibon-er har morh-e tomar oi beautiful smile-ta bachiye rakhar cheshta thakbe. 🥹">⭐ Star 3</button>
+        <button class="star-btn" data-msg="Tomar moddhe ekta shanto prem dekhi ami, jekhane kono daabi nei, shudhu tomar bhalo thakar prarthona. 🌸">⭐ Star 4</button>
+      </div>
+
+      <div id="starRevealedMsg" class="star-msg-box">
+        <em>Tap a star above...</em>
+      </div>
+
+      <button class="btn primary next-screen-btn mt-20" data-next="screen-quiz">Next Surprise →</button>
+    </div>
+  </section>
+
+  <!-- PHASE 09: Playful Quiz -->
+  <section class="screen" id="screen-quiz">
+    <div class="card glass">
+      <h2>A Little Playful Quiz 🙈</h2>
+      <p class="subtitle">Ekta chhoto test (no wrong answers!):</p>
+      
+      <div class="quiz-box">
+        <p class="quiz-q" id="quizQuestion">Jokhon amar message ashe, tokhon tomar first reaction ki hoy?</p>
+        <div class="quiz-options" id="quizOptions">
+          <button class="quiz-opt" data-ans="1">A) Ektu innocent smile chole ashe 🙈</button>
+          <button class="quiz-opt" data-ans="2">B) 'Abar eta ke!' bole dekho 🤣</button>
+          <button class="quiz-opt" data-ans="3">C) Secretly peaceful feel hoy 🌷</button>
+        </div>
+      </div>
+
+      <p id="quizScoreText" class="quiz-result hidden"></p>
+      <button class="btn outline small mt-15" id="skipQuizBtn">Skip to Letter 💌</button>
+    </div>
+  </section>
+
+  <!-- PHASE 10: Typewriter Letter with Hold-to-Reveal Thought -->
+  <section class="screen" id="screen-letter">
+    <div class="parchment-container">
+      <div class="parchment-card">
+        <h3 class="letter-tag">Hi Nasrin… 🙈💗</h3>
+        
+        <div id="typewriterBody" class="letter-body"></div>
+
+        <!-- Secret Hold-to-Reveal Thought Box -->
+        <div class="hold-reveal-container" id="holdRevealBox">
+          <div class="hold-instruction" id="holdInstruction">🔒 Hold for 1.2s to unlock a hidden thought...</div>
+          <div class="hold-progress-bar" id="holdProgressBar"></div>
+          <p class="hold-secret-text blurred" id="secretThoughtText">
+            "Insta DM theke shuru hoye tumi kokhon je amar saradiner shanti hoye gele, setar kono diagnosis amar kache nei! NEET-er pora sesh, ebar ektu amar ei pagol mon-take bhalo kore shustho kore dao na... Nas? 🩺🌸✨"
+          </p>
+        </div>
+
+        <div class="letter-controls">
+          <button id="showFullLetterBtn" class="btn outline small">Show Full Text</button>
+          <button class="btn primary next-screen-btn" id="letterNextBtn" data-next="screen-take-time">Take a Deep Breath 🌸</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHASE 13 & 14: Take Your Time & 3-2-1 Countdown -->
+  <section class="screen" id="screen-take-time">
+    <div class="card glass text-center">
+      <div class="soft-heart-beat">💓</div>
+      <h2>Take Your Time, Nasrin 🌸</h2>
+      <p class="take-time-p">
+        Kono hurry nei, kono pressure nei.<br>
+        Tomar feelings, tomar comfort sob theke aage.
+      </p>
+
+      <div class="countdown-wrapper">
+        <div class="countdown-circle" id="countdownNum">3</div>
+      </div>
+
+      <button id="skipCountdownBtn" class="btn outline small mt-15">Skip Countdown</button>
+    </div>
+  </section>
+
+  <!-- PHASE 15: Main Proposal Screen (No privacy notice) -->
+  <section class="screen" id="screen-proposal">
+    <div class="card glass proposal-card">
+      <div class="rose-bloom">🌹</div>
+      <h1 class="proposal-question">Amake ki tomar life-e ekta chance debe? 🥹💗</h1>
+      
+      <p class="sub-reassurance"><em>Tomar mon ja bole, shudhu shetai shuno... 🌷</em></p>
+
+      <div class="proposal-buttons">
+        <button id="btnYes" class="btn choice-yes">YES ❤️</button>
+        <button id="btnNo" class="btn choice-no">NO 🌷</button>
+      </div>
+
+      <p id="sendingStatus" class="sending-text hidden"></p>
+    </div>
+  </section>
+
+  <!-- PHASE 16: YES Ending with Blooming Rose Animation & Prescription Card -->
+  <section class="screen" id="screen-ending-yes">
+    <div class="card glass text-center">
+      <!-- Blooming Rose Showcase -->
+      <div class="blooming-rose-wrapper">
+        <div class="blooming-rose">
+          <div class="petal p1"></div>
+          <div class="petal p2"></div>
+          <div class="petal p3"></div>
+          <div class="petal p4"></div>
+          <div class="rose-center">❤️</div>
+        </div>
+      </div>
+
+      <h2>Thank You, Nasrin! 🥹</h2>
+      <p class="final-words">
+        Tomar ei 'YES'-ta amar din-er sob theke boro gift. Ami shob shomoy cheshta korbo tomar mukher ei smile-ta ar tomar bhorsha-take shonmaner sathe bachie rakhar.
+      </p>
+
+      <!-- DOCTOR'S PRESCRIPTION CARD -->
+      <div class="prescription-card" id="prescriptionCard">
+        <div class="rx-header">
+          <div class="clinic-info">
+            <h3>Dr. Nas 🩺</h3>
+            <p>Specialist in Healing Heavy Hearts & Stolen Smiles</p>
+          </div>
+          <div class="rx-symbol">℞</div>
+        </div>
+
+        <div class="rx-meta">
+          <p><strong>Patient Name:</strong> Nasrin Sultana</p>
+          <p><strong>Date:</strong> Lifetime</p>
+          <p><strong>Diagnosis:</strong> Chronic Smile Deficiency & Post-NEET Stress</p>
+        </div>
+
+        <div class="rx-body">
+          <div class="med-item">
+            <span class="med-name">1. Daily Smile Tab — 100mg</span>
+            <span class="med-dose">Din-e minimum 2 bar heshe kotha bola (No skip).</span>
+          </div>
+          <div class="med-item">
+            <span class="med-name">2. Stress-Relief Syrup</span>
+            <span class="med-dose">NEET shesh! Porashonar shob tension theke ebar shanto thaka.</span>
+          </div>
+          <div class="med-item">
+            <span class="med-name">3. Permanent Care Capsule</span>
+            <span class="med-dose">Mon kharap hole shathe shathe ekta message ba call kora.</span>
+          </div>
+        </div>
+
+        <div class="rx-footer">
+          <p class="refill-tag">Valid Refill: <em>Unlimited & Forever</em></p>
+          <div class="rx-sign">
+            <span>Approved by:</span>
+            <strong>Dr. Nas ✍️</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="secret-vault">
+        <h3>Secret Notes for You 💌</h3>
+        <div class="vault-grid">
+          <button class="vault-btn" data-vault="Open when you smile: Keep shining always, tomar oi innocent smile charpash shanto kore daay. ✨">Open when you smile</button>
+          <button class="vault-btn" data-vault="Open when you need a smile: Remember someone genuinely cares and is rooting for your happiness every day. 🌷">Open when you need a smile</button>
+          <button class="vault-btn" data-vault="Open when you miss me: Ami kothao jachhi na, shob somoy tomar shathe achi. 🙈">Open when you miss me</button>
+        </div>
+        <p id="vaultReveal" class="vault-reveal-text"></p>
+      </div>
+
+      <button id="openHandwrittenBtn" class="btn primary mt-20">Read My Handwritten Letter 💌 ➔</button>
+
+      <p class="digital-sign">— Someone who cares about you 💌</p>
+      <button class="btn outline small restart-btn">Replay Experience ↺</button>
+    </div>
+  </section>
+
+  <!-- PHASE 17: NO Ending (Calm & Full Respect) -->
+  <section class="screen" id="screen-ending-no">
+    <div class="card glass text-center">
+      <div class="tulip-icon">🌷</div>
+      <h2>It's okay, Nasrin. Tomar happiness-i important. 🌷</h2>
+      <p class="final-words">
+        Tomar feelings ar decision-ke ami strictly respect kori. Tomar bondhutto ar ei shundor shomoy-ta amar kache shob shomoy valuable thakbe. Shustho theko, bhalo theko!
+      </p>
+
+      <div class="secret-vault">
+        <h3>Always remember this 🌸</h3>
+        <p class="vault-reveal-text show">"Tomar shanti ar bhalo thaka amar kache shobcheye age. Never let anyone dim that beautiful smile of yours."</p>
+      </div>
+
+      <p class="digital-sign">— Someone who cares about you 💌</p>
+      <button class="btn outline small restart-btn">Replay Experience ↺</button>
+    </div>
+  </section>
+
+  <!-- PHASE 18: Vintage Handwritten Letter (Burned Paper Aesthetic - ONLY ON YES) -->
+  <section class="screen" id="screen-handwritten-letter">
+    <div class="vintage-parchment-container">
+      <div class="vintage-paper" id="vintagePaperCard">
+        <span class="decor-corner top-left">🌹🌸</span>
+        <span class="decor-corner top-right">🌸🌿</span>
+        <span class="decor-corner bottom-left">🌸🌿</span>
+        <span class="decor-corner bottom-right">🌹🌸</span>
+        <span class="decor-butterfly b-top">🦋</span>
+        <span class="decor-butterfly b-bottom">🦋</span>
+
+        <h2 class="letter-aesthetic-title">THE MOMENT OF YOU..!! 🌷</h2>
+
+        <div class="letter-aesthetic-text">
+          <p>
+            I don't know how to describe it,<br>
+            But the moment I saw you, the world around me stood still...<br>
+            Like the ocean touching the shore,<br>
+            Time paused, and the second became a shimmering memory.
+          </p>
+
+          <p class="mt-verse letter-shayari-highlight">
+            "Hazaar chehre hain is jahaan mein magar,<br>
+            Meri nigaah sirf tujh par aake theharti hai.<br>
+            Tu paas ho ya door rahe mujhse,<br>
+            Meri har dua tera hi naam leti hai." ✨
+          </p>
+
+          <p class="mt-verse">
+            Nasrin, tomar ei 'YES'-ta amar kache shobcheye boro upohar. Ami boro kono promise korbo na, shudhu eituku bolbo—tomar hashi, tomar protita shopno, aar tomar shiddhanto-ke ami shob shomoy shorbochho shonman korbo.
+          </p>
+
+          <p class="mt-verse">
+            Tomar chhotokhato abdar theke shuru kore tomar shanto thaka obdi, shob kichhu amar kache khub daami. Shob shomoy emni khushi theko, smile rekho mukhe. Ami shob shomoy tomar pashe achi. 🌸
+          </p>
+        </div>
+
+        <div class="letter-aesthetic-sign">
+          <p>Forever with love & respect,<br><span>— Yours, Jia (Jirul) ✍️</span></p>
+        </div>
+
+        <div class="letter-action-btns">
+          <button id="saveLetterBtn" class="btn primary small">Save Letter as Memory 📜</button>
+          <button class="btn outline small restart-btn">Replay Surprise ↺</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
